@@ -1,0 +1,54 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/wuxing/wuxing",
+    "pages/wuge/wuge",
+    "pages/ziku/ziku",
+    "pages/info/info"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "yh - name",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "borderStyle": "black",
+    "backgroundColor": "#333",
+    "color": "#8F8F94",
+    "selectedColor": "#f33e54",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/img/tabbar/home.png",
+        "selectedIconPath": "static/img/tabbar/homeactive.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/wuxing/wuxing",
+        "iconPath": "static/img/tabbar/me.png",
+        "selectedIconPath": "static/img/tabbar/meactive.png",
+        "text": "五行"
+      },
+      {
+        "pagePath": "pages/wuge/wuge",
+        "iconPath": "static/img/tabbar/grid.png",
+        "selectedIconPath": "static/img/tabbar/gridactive.png",
+        "text": "五格"
+      },
+      {
+        "pagePath": "pages/ziku/ziku",
+        "iconPath": "static/img/tabbar/guanzhu.png",
+        "selectedIconPath": "static/img/tabbar/guanzhuactive.png",
+        "text": "字库"
+      },
+      {
+        "pagePath": "pages/info/info",
+        "iconPath": "static/img/tabbar/news.png",
+        "selectedIconPath": "static/img/tabbar/newsactive.png",
+        "text": "信息"
+      }
+    ]
+  },
+  "usingComponents": {}
+}
