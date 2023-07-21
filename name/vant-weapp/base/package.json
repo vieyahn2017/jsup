@@ -1,0 +1,19 @@
+{
+  "name": "vant-weapp-demo",
+  "version": "1.0.0",
+  "description": "Collection of vant-weapp demos.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vant/weapp": "^1.0.0",
+    "cnchar": "^3.2.4",
+    "cnchar-info": "^3.2.4",
+    "cnchar-order": "^3.2.4",
+    "cnchar-radical": "^3.2.4",
+    "cnchar-trad": "^3.2.4"
+  }
+}

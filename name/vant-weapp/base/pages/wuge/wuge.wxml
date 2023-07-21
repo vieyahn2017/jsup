@@ -1,0 +1,26 @@
+<view>
+  <view class="yh-nostyle-title"> 五格笔画查询：</view>
+  <van-field type="text" class="yh-nostyle-input" placeholder="请输入汉字" model:value="{{chars}}" bind:blur="inquiryHanZiBlur"/>
+  <van-button plain block type="primary" bindtap="inquiryOptionSwitch">{{inquirOptionStr}}</van-button>
+  <view wx:if="{{showResult}}" class="jx-block">
+    <van-cell wx:for="{{contentsItems}}" wx:for-item="item" wx:key="item" title="{{item}}" />
+  </view>
+  <van-divider />
+
+  <view class="yh-nostyle-title"> 五格定式查询：（根据姓氏查询名字最适合的笔划）</view>
+  <view class="jx-block"> 请输入姓氏（单字）： </view>
+  <van-field
+    model:value="{{familyname}}"
+    class="yh-nostyle-input"
+    bind:blur="inputXingShi"
+  />
+  <view class="jx-block">姓氏笔画（五格）： {{familynumber}} </view>
+
+  <view class="jx-block">根据姓氏笔画选择五格定式 </view>
+  <van-collapse accordion value="{{ activeName }}" bind:change="onChange5G">
+    <van-collapse-item wx:for="{{Xingshi5GItems}}" wx:for-item="item"  wx:for-index="idx" wx:key="item" title="{{item}}" name="{{idx}}">
+      <van-cell wx:for="{{result5GItems}}" wx:for-item="item2" wx:key="item2" title="{{item2}}" />
+    </van-collapse-item>
+  </van-collapse>
+
+</view>

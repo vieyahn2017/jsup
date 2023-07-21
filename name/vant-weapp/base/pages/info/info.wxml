@@ -1,0 +1,36 @@
+<view>
+  <view class="yh-nostyle-title">关于取名</view>
+  目前市面的取名网站、软件大概包括以下几类:
+  <view />
+  <label class="yh-nostyle-tip2">笔划派:</label> 认为笔划全吉, 人生就大吉. 准确度12.5%
+  <view />
+  <label class="yh-nostyle-tip2">三才派:</label> 完全不管笔划吉凶, 只认为天地人三才五行相生, 人生就大吉. 准确度36.6% <!-- 56.6% -->
+  <view />
+  <label class="yh-nostyle-tip2">补八字:</label> 完全不管笔划吉凶, 只认为名字补到先天八字命盘欠缺, 人生就大吉. 其实准确度非常低
+  <view />
+  <label class="yh-nostyle-tip2">生肖派:</label> 完全不管笔划吉凶, 只认为生肖用对字形, 人生就大吉. 准确度27.55%
+  <view />
+  <label class="yh-nostyle-tip2">天运派:</label> 完全不管笔划吉凶, 只认为名字不要被出生年天运五行所克, 人生就大吉. 准确度25.32%
+  <view />
+  <label class="yh-nostyle-tip2">卦象派:</label> 完全不管笔划吉凶, 只认为名字求出卦象漂亮, 人生就大吉. 准确度40.26%
+
+  <view class="yh-nostyle-title2">使用</view>
+  这个小程序结合了上面这些流派的一些取名要点，以五格剖象法为基，结合生肖和八字喜用来取名。
+  <view /> 【五格】页面，可以查询姓氏对应的五格定式，就是把笔划派和三才派的取名方式固化为笔划搭配。
+  <view /> 【五行】页面，根据生辰时刻查询八字和五行喜用。
+  <view /> 【字库】页面，可以选择字库，目前包括：1.常用名字字库女/男 4.杨姓 5.五行保底字库 6.你的自定义字库
+  <view /> 【首页】页面，设置生肖、五行、五格，然后取名。
+  <view /> 注：暂不支持复姓。
+  <view />
+
+  <view class="yh-nostyle-title2">五格</view>
+  五格剖象法是依据姓名的笔画数和一定规则建立起来天/地/人/总/外格等五格数理关系，来推算人的运势。
+  <view /> 详情可以参看百度百科。
+
+  <view class="yh-nostyle-title2">关于</view>
+  本小程序第一版没有使用UI框架，用的是颜色区分功能。
+  <label class="yh-nostyle-input">蓝色字体是可输入部分，</label><label class="yh-nostyle-tip">红色是详情显示，</label> 等等。
+  <view />
+  目前第二版，部分页面用vant重写。生肖和五行选择、时间设置等都引入了UI插件，方便使用。
+  <view />
+</view>

@@ -1,0 +1,37 @@
+/*每个页面公共css */
+.yh-nostyle-input {
+  color: #00d;
+}
+
+.yh-nostyle-tip {
+  color: #e00;
+}
+
+.yh-nostyle-tip2 {
+  color: #e0e;
+}
+
+.yh-nostyle-title {
+  color: #848;
+}
+
+.yh-nostyle-title2 {
+  color: #848;
+  height: 36px;
+  display: flex;
+  align-items: flex-end;
+}
+
+page {
+  --status-bar-height: 25px;
+  --top-window-height: 0px;
+  --window-top: 0px;
+  --window-bottom: 0px;
+  --window-left: 0px;
+  --window-right: 0px;
+  --window-magin: 0px
+}
+
+[data-c-h="true"] {
+  display: none !important;
+}

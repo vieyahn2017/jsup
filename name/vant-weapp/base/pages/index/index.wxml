@@ -1,0 +1,69 @@
+<view>
+  <view class="jx-block" bindtap="showPicker6Ziku"> 请选择字库：
+    <label class="yh-nostyle-input"> {{zikuName}} </label>
+  </view>
+  <van-popup show="{{ showZikuPicker }}">
+    <van-picker
+      show-toolbar
+      title="请选择字库"
+      default-index="{{ 0 }}"
+      columns="{{ zikuDict }}"
+      bind:cancel="onCancel6"
+      bind:confirm="onConfirm6"
+    />
+  </van-popup>
+
+  <view class="jx-block" bindtap="showSxPicker">请选择生肖属相：
+    <label class="yh-nostyle-input">{{shengxiao}}</label>
+  </view>
+  <van-popup show="{{ showShengxiaoPicker }}">
+    <van-picker
+      show-toolbar
+      title="生肖"
+      default-index="{{ 4 }}"
+      columns="{{ shengxiao12 }}"
+      bind:cancel="onCancel12"
+      bind:confirm="onConfirm12"
+    />
+  </van-popup>
+
+  <view class="jx-block" bindtap="showWxPicker"> 请输入五行喜用：
+    <label class="yh-nostyle-input">{{xiyong}}</label>
+  </view>
+  <van-popup show="{{ showWuxingPicker }}">
+    <van-picker
+      show-toolbar
+      title="五行"
+      default-index="{{ 1 }}"
+      columns="{{ wuxing5 }}"
+      bind:cancel="onCancel5"
+      bind:confirm="onConfirm5"
+    />
+  </van-popup>
+
+  <view class="jx-block"> 请输入生成数量：
+    <input type="number" class="yh-nostyle-input" value="{{namecount}}" bindinput="ipunt10"/>
+  </view>
+  <view class="jx-block"> 请输入姓氏（单字）： </view>
+    <input type="text"
+      class="yh-nostyle-input"
+      value="{{familyname}}"
+      bindinput="inputXingShi2"
+    />
+  <view class="jx-block">姓氏笔画（五格）： {{familynumber}} </view>
+
+  <view class="jx-block">
+    <view bindtap="hiddenResult">根据姓氏笔画选择五格定式</view>
+    <view wx:for="{{Xingshi5GItemsEX}}" wx:for-item="item" wx:key="item" value="{{item.item}}" bindtap="{{item.func}}">{{item.item}}</view>
+    <view wx:if="{{Xingshi5G}}" class="yh-nostyle-tip">已选择：{{Xingshi5G}}</view>
+  </view>
+  <view class="jx-block"><button class="jx-buttton" bindtap="generate5">生成</button></view>
+
+  <view wx:if="{{showResult}}" class="jx-block">
+    <view wx:for="{{nameDicts}}" wx:for-item="item" wx:key="item" wx:for-index="index" data-index="index" bindtap="{{item.func}}">{{item.name}}
+      <label wx:if="{{item.wuxingVisable}}">   ->  {{item.wuxing}}</label>
+    </view>
+    <view wx:if="{{resultless}}" class="yh-nostyle-tip">{{resultless}}</view>
+  </view>
+
+</view>

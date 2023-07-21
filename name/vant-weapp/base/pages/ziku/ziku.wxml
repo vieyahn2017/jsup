@@ -1,0 +1,43 @@
+<view>
+  <view> 【字库】设置，在首页的请选择字库处可以下拉选择，以及点击显示\隐藏详情。
+  </view>
+  <view> 内置字库列表
+  </view>
+
+  <van-collapse value="{{ activeNames }}" bind:change="onChange">
+    <van-collapse-item title="1.常用名字字库女" name="1">
+      {{DICT_NORMAL_GIRL}}
+    </van-collapse-item>
+    <van-collapse-item title="2.常用名字字库男" name="2">
+      {{DICT_NORMAL_BOY}}
+    </van-collapse-item>
+    <van-collapse-item title="3.常用名字字库" name="3">
+      上面两个加起来（源于cnchar）
+    </van-collapse-item>
+    <van-collapse-item title="4.杨姓我设选字库" name="4">
+      {{DICT_YANGH}}
+    </van-collapse-item>
+    <van-collapse-item title="5.五行保底字库" name="5">
+      <van-cell title="金:小少世如秀金思书悦超诗睿锐静聪双识馨" />
+      <van-cell title="木:久月玉朵君佳虹珂若茗琴语娇筱懋蕊蕾蓝" />
+      <van-cell title="水:子文白冰江雨波洋雪云湘凤慧霏鸿馥滢潇" />
+      <van-cell title="火:大天立光彤明南珍晗晴旸宁瑶龙黛焘丽宝" />
+      <van-cell title="土:山友永宇辰宛音轩婉岚圣嫣影衡阳璧韵邺" />
+      <van-cell title="(五行各选了18个字，五格笔画3-20各1个)" />
+    </van-collapse-item>
+    <van-collapse-item title="6.你的自定义字库" name="6">
+      <text class="yh-nostyle-tip">基于5.五行保底字库，你可以自行增删:</text>
+      <van-field
+        model:value="{{customizeZiku}}"
+        class="yh-nostyle-input"
+        type="textarea"
+        autosize
+        show-confirm-bar="true"
+        rows="10"
+        placeholder="你的自定义字库"
+        bind:blur="input6"
+      />
+    </van-collapse-item>
+  </van-collapse>
+
+</view>

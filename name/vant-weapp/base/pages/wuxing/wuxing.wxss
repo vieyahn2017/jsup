@@ -1,0 +1,8 @@
+.van-picker__column:nth-child(5) {
+  display:none;
+}
+.van-cell__value>text{
+    display: inline-block;
+    text-align: left;
+    word-break: break-all;
+}
