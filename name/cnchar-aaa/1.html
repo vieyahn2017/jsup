@@ -1,0 +1,316 @@
+<div>
+    <div class='jx-block'>
+	五格笔画查询：请输入汉字：<input class="jx-input" id="_chars" value="请输入汉字"></input>
+        <button class="jx-buttton" onclick="inquiry5()">查询</button>
+        <button class="jx-buttton" onclick="reset5()">隐藏</button>
+    </div>
+    <div class='jx-block' id="_result1">
+    </div>
+
+    <div class='jx-block'>
+        取名：
+    </div>
+    <div class='jx-block'>
+        <input id='_radio1' type='radio' checked='true' name='gender'>
+        <label for='_radio1'>不限</label>
+        <input id='_radio2' type='radio' name='gender'/>
+        <label for='_radio2'>男孩名</label>
+        <input id='_radio3' type='radio' name='gender'>
+        <label for='_radio3'>女孩名</label>
+    </div>
+    <div class='jx-block'>请选择生肖属相：
+    <select name="selectSX" id="_selectSX" onchange="select0()">
+        <option value="鼠">鼠</option><option value="牛">牛</option><option value="虎">虎</option><option value="兔" selected>兔</option>
+        <option value="龙">龙</option><option value="蛇">蛇</option><option value="马">马</option><option value="羊">羊</option>
+        <option value="猴">猴</option><option value="鸡">鸡</option><option value="狗">狗</option><option value="猪">猪</option>
+    </select>
+    <span class='jx-block' id="_result0">
+    </span>
+    </div>
+    <div class='jx-block'>请选择常见【姓氏】
+    <select name="selectFN" id="_selectFN" onchange="select1()">
+        <option value=" "></option>
+        <option value="杨" selected>杨</option>
+        <option value="王">王</option><option value="李">李</option><option value="孙">孙</option><option value="张">张</option>
+        <option value="黄">黄</option><option value="赵">赵</option><option value="刘">刘</option><option value="陈">陈</option>
+        <option value="丁">丁</option><option value="山">山</option><option value="文">文</option><option value="田">田</option>
+        <option value="米">米</option><option value="杜">杜</option><option value="林">林</option><option value="柳">柳</option>
+<!--    <option value="秦">秦</option><option value="董">董</option><option value="彭">彭</option><option value="向">向</option>-->
+    </select>
+    </div>
+    <div class='jx-block'>或者输入【姓氏】
+    <input id="_familyname" class="jx-input jx-full" onblur="blur1()"></input> </div>
+    <div class='jx-block'>姓氏笔画（五格）：
+        <span id="_familynumber">13</span></div>
+         <!-- 我希望给这个增加一个change事件来监听呢？ onchange="refresh_select2() 试了不行 -->
+    <div class='jx-block'>根据姓氏笔画选择五格定式
+    <select name="select5G" id="_select5G" onchange="select2()">
+        <option value="13-18-14">13-18-14</option>
+        <option value="13-8-16">13-8-16</option>
+        <option value="13-12-4">13-12-4</option>
+        <option value="13-12-23">13-12-23</option>
+        <option value="13-12-12">13-12-12</option>
+        <option value="13-3-15">13-3-15</option>
+        <option value="13-18-17">13-18-17</option>
+        <option value="13-18-6">13-18-6</option>
+        <option value="13-12-6">13-12-6</option>
+    </select>
+    </div>
+    <div class='jx-block'>
+        请输入生成名字个数：<input class="jx-input" id="_number" value="5"></input>
+    </div>
+    <div class='jx-block'>
+        <button class="jx-buttton" onclick="generate5()">生成</button>
+    </div>
+    <div class='jx-block'>
+        <button class="jx-buttton" onclick="generate5_2()">生成2</button>
+    </div>
+    <div class='jx-block'>
+        <button class="jx-buttton" onclick="show5()">查看五格释义</button>
+    </div>
+    <div class='jx-block' id="_result5">
+    </div>
+    <div class='jx-block' id="_result5g" onclick="click5g()">
+    </div>
+
+    <div class='jx-block' style="height:100" id="seperator">
+    </div>
+    <div class='jx-block'>目标名字候选区：
+    </div>
+    <div class='jx-block' id="targeted_names" style="color:red"></div>
+
+</div>
+
+
+<script>
+    let Xing = "杨";
+
+    // js扩展String.prototype.format字符串拼接的功能
+    String.prototype.format = function(){
+        if(arguments.length==0){
+            return this;
+        }
+        for(var s=this, i=0; i<arguments.length; i++){
+            s = s.replace(new RegExp("\\{"+i+"\\}","g"), arguments[i]);
+        }
+        return s;
+    };
+
+    function inquiry5() {
+        var char2 = chineseSel(_chars.value) || '汉';
+        // console.log(transRadicalStrokeIn5(char2));
+        var contents = [];
+		char2.split("").forEach((x) => {r=transRadicalStrokeIn5(x); /* console.log(r); */ contents.push(JSON.stringify(r) + "\n")});
+        let content = contents.join("");
+		if(char2.length == 3) {
+		    var details = explain5GNameOf3Char(char2);
+            let GE_PORMAT = "{0}[{1}]({2})：{3}\n";
+            content += char2 + "可能是个姓名，其五格详情如下\n";
+            content += "五格笔画： " + details.name + "\n";
+            content += GE_PORMAT.format("天格", details.tian.no, details.tian.luck == "凶"? "中": details.tian.luck, details.tian.detail);
+            content += GE_PORMAT.format("地格", details.di.no, details.di.luck, details.di.detail);
+            content += GE_PORMAT.format("人格", details.ren.no, details.ren.luck, details.ren.detail);
+            content += GE_PORMAT.format("总格", details.zong.no, details.zong.luck, details.zong.detail);
+            content += GE_PORMAT.format("外格", details.wai.no, details.wai.luck, details.wai.detail);
+		}
+		_result1.innerText = content;
+    }
+
+    function reset5() {
+		_result1.innerText = "";
+    }
+
+    function select0() {
+        shengxiao = _selectSX.value;
+        let content = getShengxiaoLike(shengxiao);
+		_result0.innerText = content;
+    }
+
+    let getOfFamilyDicts = function (arr, fn) {
+        for(let i=0, len=arr.length; i < len; i++) {
+            if (fn == arr[i].f) {
+                return arr[i].n;
+            }
+        }
+        return 0;
+    }
+
+    function blur1() { /* get_family_number */
+        var familyname = _familyname.value || '杨';
+        Xing = _familyname.value;
+        // 从已整理好的姓氏笔画dict中获取也行，也是用getOfFamilyDicts
+        var familynumber = transRadicalStrokeIn5(familyname).stroke5;
+		_familynumber.innerText = familynumber;
+		// 同时取消下拉选项的selected
+		document.querySelector("#_selectFN").options[0].selected = true;
+    }
+
+    function select1() {
+        _familyname.value = "";
+        // document.querySelector("#_familyname").value=""
+        // CYFN = {"杨":13, "文":4, "李":7, "刘":15, "王":4, "张":11, "陈":16, "黄":12, "孙":10, "赵":14}
+        CYFN = [{"f": "杨","n": 13}, {"f": "文","n": 4}, {"f": "李","n": 7}, {"f": "刘","n": 15},
+                {"f": "王","n": 4}, {"f": "张","n": 11}, {"f": "陈","n": 16}, {"f": "黄","n": 12},
+                {"f": "孙","n": 10}, {"f": "赵","n": 14},  {"f": "董","n": 15},
+                {"f": "丁","n": 2}, {"f": "山","n": 3}, {"f": "田","n": 5}, {"f": "米","n": 6}, {"f": "杜","n": 7},
+                {"f": "林","n": 8}, {"f": "柳","n": 9}, {"f": "秦","n": 10},{"f": "彭","n": 12}, {"f": "向","n": 17}]
+		Xing = _selectFN.value;
+		_familynumber.innerText = getOfFamilyDicts(CYFN, _selectFN.value);
+    }
+
+    function select2() {
+        // console.log(_select5G.value);
+        _result5.innerText = "";
+        _result5g.innerText = "";
+    }
+
+    function refresh_select2(fn_num) {
+        // 根据姓氏笔画，更新select5G的options的内容
+        fn_num_5G_dict = {
+            "2": ["2-9-4", "2-1-10", "2-19-4", "2-11-10", "2-13-10", "2-3-10"],
+            "3": ["3-18-14", "3-13-5", "3-12-6", "3-10-22", "3-8-5", "3-8-24", "3-20-12", "3-3-12"],
+            "4": ["4-20-15", "4-9-12", "4-9-2", "4-13-12", "4-13-4", "4-9-4", "4-9-22", "4-19-12", "4-3-14"],
+            "5": ["5-20-4", "5-10-14", "5-2-6", "5-18-14", "5-10-6", "5-8-5", "5-8-24", "5-12-6"],
+            "6": ["6-11-14", "6-9-14", "6-9-6", "6-12-23", "6-19-4", "6-11-14", "6-19-16", "6-9-16", "6-10-7"],
+            "7": ["7-9-16", "7-8-10", "7-10-6", "7-11-14", "7-8-17", "7-9-15", "7-30-15", "7-8-16"],
+            "8": ["8-8-16", "8-9-7", "8-9-6", "8-13-12", "8-10-6", "8-3-12", "8-7-16", "8-9-6"],
+            "9": ["9-7-16", "9-2-14", "9-2-4", "9-12-20", "9-12-4", "9-9-6", "9-20-12", "9-6-17", "9-8-7"],
+            "10": ["10-14-17", "10-11-10", "10-11-2", "10-19-12", "10-11-12", "10-3-10", "10-11-20", "10-13-12", "10-3-12"],
+            "11": ["11-10-20", "11-4-20", "11-2-4", "11-14-23", "11-12-12", "11-14-4", "11-21-20", "11-20-4", "11-10-14"],
+            "12": ["12-9-16", "12-13-4", "12-1-10", "12-20-15", "12-9-12", "12-3-10", "12-23-12", "12-9-14", "12-3-14"],
+            "13": ["13-18-14", "13-8-16", "13-12-4", "13-12-23", "13-12-12", "13-3-15", "13-18-17", "13-18-6", "13-12-6"],
+            "14": ["14-10-15", "14-3-15", "14-3-12", "14-3-22", "14-9-12", "14-9-6", "14-11-12", "14-11-7"],
+            "15": ["15-9-23", "15-10-7", "15-9-7", "15-22-15", "15-2-14", "15-20-4", "15-8-24", "15-3-14"],
+            "16": ["16-19-6", "16-9-7", "16-9-4", "16-21-4", "16-13-4", "16-9-6", "16-19-5", "16-19-4", "16-2-14"],
+            "17": ["17-20-15", "17-8-16", "17-8-7", "17-18-6", "17-8-10", "17-18-17", "17-12-6"],
+            "18": ["18-7-16", "18-7-10", "18-7-6", "18-19-10", "18-11-10", "18-3-12", "18-14-15", "18-14-7", "18-11-6"],
+            "19": ["19-12-20", "19-12-4", "19-2-4", "19-11-7", "19-6-7", "19-12-17", "19-2-14"],
+            "20": ["20-11-14", "20-1-12", "20-9-23", "20-3-12", "20-12-20", "20-11-4"],
+            "21": ["21-8-10", "21-11-5", "21-10-14", "21-10-6", "21-11-20", "21-2-14"],
+            "22": ["22-13-4", "22-10-5", "22-19-4", "22-9-6", "22-13-12", "22-9-14"]
+        }
+        options = fn_num_5G_dict[fn_num];
+        if(options && options.length > 0) {
+            _select5G.options.length = 0;
+            options.forEach(x =>_select5G.add(new Option(x, x)));
+        }
+    }
+
+    function refresh_select2_cb() {
+        refresh_select2(_familynumber.innerText);
+        _result5.innerText = "";
+        _result5g.innerText = "";
+    }
+
+    // 最终监听的实现参考了 https://blog.csdn.net/qq_38627581/article/details/79467298
+    let FN1 = document.querySelector("#_familynumber").innerHTML;
+    setInterval(function() {
+        let FN2 = document.querySelector("#_familynumber").innerHTML;
+        if (FN2 != FN1) {
+            refresh_select2_cb();
+            FN1 = FN2;
+        }
+    }, 100);
+
+    function generate5() {
+        param = _select5G.value;
+        if(!param) return;
+        param3 = param.split("-");
+        b = param3[1];
+        c = param3[2];
+        // _result5.innerText = make5GName(Xing, b, c).map(x => x.name).join("\n");
+        let results = make5GName(Xing, b, c, {"num": _number.value, "shengxiao": _selectSX.value});
+        console.log(results);
+        var _result5_div = document.getElementById("_result5");
+        _result5_div.innerHTML = "";
+        results.forEach((x) => {
+            var div1 = document.createElement("div");
+            div1.id = "new_name";
+            div1.innerHTML = x.name;
+            // div1.onlick = "clickk()";
+            // div1.href = "javascript:clickk()";
+            _result5_div.appendChild(div1);
+        });
+        document.querySelectorAll("#new_name").forEach(x => x.addEventListener("click", click_new_name));
+    }
+
+    function generate5_2() {
+        param = _select5G.value;
+        if(!param) return;
+        param3 = param.split("-");
+        b = param3[1];
+        c = param3[2];
+        // _result5.innerText = make5GName(Xing, b, c).map(x => x.name).join("\n");
+        let results = make5GName2(Xing, b, c, {"num": _number.value, "shengxiao": _selectSX.value});
+        console.log(results);
+        var _result5_div = document.getElementById("_result5");
+        _result5_div.innerHTML = "";
+        results.forEach((x) => {
+            var div1 = document.createElement("div");
+            div1.id = "new_name";
+            div1.innerHTML = x.name;
+            // div1.onlick = "clickk()";
+            // div1.href = "javascript:clickk()";
+            _result5_div.appendChild(div1);
+        });
+        document.querySelectorAll("#new_name").forEach(x => x.addEventListener("click", click_new_name));
+    }
+
+    function show5() {
+        if(_result5g.innerText != "") {
+            _result5g.innerText = "";
+            return;
+        }
+        param = _select5G.value;
+        if(!param) return;
+        param3 = param.split("-");
+        a = param3[0];
+        b = param3[1];
+        c = param3[2];
+        // console.log(a, b, c);
+        let details = explain5GName(a, b, c);
+        // console.log(details);
+        // _result5g.innerText = JSON.stringify(details);
+        let content = "";
+        let GE_PORMAT = "{0}[{1}]({2})：{3}\n";
+        content += GE_PORMAT.format("天格", details.tian.no, details.tian.luck == "凶"? "中": details.tian.luck, details.tian.detail);
+        content += GE_PORMAT.format("地格", details.di.no, details.di.luck, details.di.detail);
+        content += GE_PORMAT.format("人格", details.ren.no, details.ren.luck, details.ren.detail);
+        content += GE_PORMAT.format("总格", details.zong.no, details.zong.luck, details.zong.detail);
+        content += GE_PORMAT.format("外格", details.wai.no, details.wai.luck, details.wai.detail);
+        _result5g.innerText = content;
+    }
+
+    function click5g() {
+        // _result5g.innerText = "";
+    }
+
+    function click_to_remove() {
+        // console.log(this);
+        this.parentElement.removeChild(this);
+    }
+
+    function click_new_name() {
+        // console.log(this);
+        // targeted_names.innerHTML = targeted_names.innerHTML + "," + this.innerHTML
+        var span1 = document.createElement("span");
+        span1.id = "new_target";
+        span1.innerHTML = this.innerHTML + "&nbsp;";
+        targeted_names.appendChild(span1);
+        document.querySelectorAll("#new_target").forEach(x => x.addEventListener("click", click_to_remove));
+    }
+
+
+</script>
+
+<script src="js/cnchar.min.js"></script>
+<script src="js/cnchar.trad.min.js"></script> <!-- 繁体字库 -->
+<script src="js/cnchar.radical.min.js"></script> <!-- 偏旁部首库 -->
+<script src="js/cnchar.info.min.js"></script> <!-- 汉字信息查询 cnchar.info 包含fiveElement -->
+<script src="js/cnchar.order.min.js"></script> <!-- 笔画顺序库， 左耳右耳偏旁的时候有用到 -->
+
+<script src="1.js"></script>
+
+<script>
+	// console.log(transRadicalStrokeIn5('汉'));
+</script>

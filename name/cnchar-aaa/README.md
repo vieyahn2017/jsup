@@ -1,0 +1,2 @@
+# aaa demo
+from cnchar
