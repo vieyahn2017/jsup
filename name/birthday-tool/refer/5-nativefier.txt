@@ -1,0 +1,456 @@
+html转化为apk的四种常用方法介绍
+2023-03-15APP上架
+html转化为apk是指将网页或者H5项目打包成安卓应用程序的过程。这样可以让用户更方便地使用网页服务，而不需要打开浏览器或者输入网址。
+有多种工具和方法可以实现html转化为apk，下面介绍四种常见的方式：
+– 使用Webcatlog软件。这个软件支持macOS、Windows和Linux，而且已经预置了数千个可以打包的网页服务，安装完成后就会出现在启动台里面，可以作为独立的应用使用。免费版可以安装10个网页服务独立应用。
+– 使用Nativefier命令行工具。这个工具同样支持macOS、Windows和Linux，只是操作看起来略微复杂，事实上也并不难，只要按步骤一步一步操作即可。首先需要安装Node.js和npm，在终端中输入“npm install -g nativefier”命令并回车，安装软件包。然后使用“nativefier -n \"应用名\" -i 图标文件 \"网址\"”创建应用。例如，“nativefier -n \"百度\" -i baidufa将网页做成exevicon.ico \"https://www.baidu.com\"”。最后将打包完成的应用复制到应用文件夹即可。
+– 使用Microsoft Edge浏览器。在Microsoft Edge浏览器的界面，点击右上角的“…”，在弹出的菜单中选择“APPs”，在弹出的二级菜单中选择“Install this site as an app”。这样你就可以得到一个独立的APP，在启动台中可以找到。
+- 使用一门APP开发平台工具。登录www.yimenapp.com注册成为一门开发者，之后直接新建APP，选择html打包成APP项目，之后上传您的本地html文件，一般建议25M以内的前端html代码，上传之后，指定一下APP的首页访问路径即可。之后直接在线打包成APP，一键在线生成，支持苹果和安卓双系统。另外一门还提供超过200+原生APP开发功能模块，2000+JS映射接口，开发者可以根据自己项目需求，在线选购自由组装，积木式开发组装功能。
+
+
+试了Nativefier不行；
+Microsoft Edge我这本地测，相关按钮也是灰色的
+简单试了下一门app，没弄通放弃，发布跟网站绑定，局限也大
+
+
+npm install -g http-server
+npm install -g nativefier
+
+PS C:\Users\yangm\Desktop> npm list -g
+C:\Users\yangm\AppData\Roaming\npm
+`-- http-server@14.1.1
+
+
+
+
+
+
+
+
+-p, --platform          the operating system platform to build for
+      [string] [choices: "darwin", "linux", "mac", "mas", "osx", "win32", "windows"] [default: current operating system]
+
+网上搜的支持andriod
+骗人的吧
+nativefier.cmd –platform android -n bazi -i 1.ico http://127.0.0.1:8080
+运行不报错，但是生成的是exe
+
+
+PS C:\Users\yangm> nativefier.cmd
+Error: ERROR: Nativefier must be called with either a targetUrl or the --upgrade option.
+
+    at parseArgs (C:\Users\yangm\AppData\Roaming\npm\node_modules\nativefier\src\cli.ts:592:11)
+    at Object.<anonymous> (C:\Users\yangm\AppData\Roaming\npm\node_modules\nativefier\src\cli.ts:659:18)
+    at Module._compile (node:internal/modules/cjs/loader:1254:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1308:10)
+    at Module.load (node:internal/modules/cjs/loader:1117:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:958:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)
+    at node:internal/main/run_main_module:23:47
+nativefier <targetUrl> [outputDirectory] [other options]
+or
+nativefier --upgrade <pathToExistingApp> [other options]
+
+Positionals:
+  targetUrl        the URL that you wish to to turn into a native app; required if not using --upgrade          [string]
+  outputDirectory  the directory to generate the app in
+                          [string] [default: defaults to the current directory, or env. var. NATIVEFIER_APPS_DIR if set]
+
+====== App Creation Options ======
+  -a, --arch              the CPU architecture to build for
+                                [string] [choices: "x64", "armv7l", "arm64", "universal"] [default: current Node's arch]
+  -c, --conceal           package the app source code into an asar archive                    [boolean] [default: false]
+  -e, --electron-version  specify the electron version to use (without the 'v'); see
+                          https://github.com/electron/electron/releases                                [default: 19.1.4]
+      --global-shortcuts  define global keyboard shortcuts via a JSON file; See
+                          https://github.com/nativefier/nativefier/blob/master/API.md#global-shortcuts          [string]
+  -i, --icon              the icon file to use as the icon for the app (.ico on Windows, .icns/.png on macOS, .png on
+                          Linux)                                                                                [string]
+  -n, --name              specify the name of the app     [string] [default: the title of the page passed via targetUrl]
+      --no-overwrite      do not overwrite output directory if it already exists              [boolean] [default: false]
+  -p, --platform          the operating system platform to build for
+      [string] [choices: "darwin", "linux", "mac", "mas", "osx", "win32", "windows"] [default: current operating system]
+      --portable          make the app store its user data in the app folder; WARNING: see
+                          https://github.com/nativefier/nativefier/blob/master/API.md#portable for security risks
+                                                                                              [boolean] [default: false]
+      --upgrade           upgrade an app built by an older version of Nativefier
+                          You must pass the full path to the existing app executable (app will be overwritten with
+                          upgraded version by default)                                                          [string]
+      --widevine          use a Widevine-enabled version of Electron for DRM playback (use at your own risk, it's
+                          unofficial, provided by CastLabs)                                   [boolean] [default: false]
+
+====== App Window Options ======
+      --always-on-top          enable always on top window                                    [boolean] [default: false]
+      --background-color       set the app background color, for better integration while the app is loading. Example
+                               value: '#2e2c29'                                                                 [string]
+      --bookmarks-menu         create a bookmarks menu (via JSON file); See
+                               https://github.com/nativefier/nativefier/blob/master/API.md#bookmarks-menu       [string]
+      --browserwindow-options  override Electron BrowserWindow options (via JSON string); see
+                               https://github.com/nativefier/nativefier/blob/master/API.md#browserwindow-options
+      --disable-context-menu   disable the context menu (right click)                         [boolean] [default: false]
+      --disable-dev-tools      disable developer tools (Ctrl+Shift+I / F12)                   [boolean] [default: false]
+      --full-screen            always start the app full screen                               [boolean] [default: false]
+      --height                 set window default height in pixels                               [number] [default: 800]
+      --hide-window-frame      disable window frame and controls                              [boolean] [default: false]
+  -m, --show-menu-bar          set menu bar visible                                           [boolean] [default: false]
+      --max-width              set window maximum width in pixels                          [number] [default: unlimited]
+      --max-height             set window maximum height in pixels                         [number] [default: unlimited]
+      --maximize               always start the app maximized                                 [boolean] [default: false]
+      --min-height             set window minimum height in pixels                                 [number] [default: 0]
+      --min-width              set window minimum width in pixels                                  [number] [default: 0]
+      --process-envs           a JSON string of key/value pairs to be set as environment variables before any browser
+                               windows are opened
+      --single-instance        allow only a single instance of the app                        [boolean] [default: false]
+      --tray                   allow app to stay in system tray. If 'start-in-tray' is set as argument, don't show main
+                               window on first start      [choices: "true", "false", "start-in-tray"] [default: "false"]
+      --width                  app window default width in pixels                               [number] [default: 1280]
+  -x                           set window x location in pixels from left                                        [number]
+  -y                           set window y location in pixels from top                                         [number]
+      --zoom                   set the default zoom factor for the app                             [number] [default: 1]
+
+====== Internal Browser Options ======
+      --file-download-options        a JSON string defining file download options; see
+                                     https://github.com/sindresorhus/electron-dl
+      --inject                       path to a CSS/JS file to be injected; pass multiple times to inject multiple files
+                                                                                                                 [array]
+      --lang                         set the language or locale to render the web site as (e.g., "fr", "en-US", "es",
+                                     etc.)                         [string] [default: os language at runtime of the app]
+  -u, --user-agent                   set the app's user agent string; may also use 'edge', 'firefox', or 'safari' to
+                                     have one auto-generated                                                    [string]
+      --user-agent-honest, --honest  prevent the normal changing of the user agent string to appear as a regular Chrome
+                                     browser                                                  [boolean] [default: false]
+
+====== Internal Browser Cache Options ======
+      --clear-cache      prevent the app from preserving cache between launches               [boolean] [default: false]
+      --disk-cache-size  set the maximum disk space (in bytes) to be used by the disk cache
+                                                                                    [number] [default: chromium default]
+
+====== URL Handling Options ======
+      --block-external-urls   forbid navigation to URLs not considered "internal" (see '--internal-urls').  Instead of
+                              opening in an external browser, attempts to navigate to external URLs will be blocked
+                                                                                              [boolean] [default: false]
+      --internal-urls         regex of URLs to consider "internal"; by default matches based on domain (see
+                              '--strict-internal-urls'); all other URLs will be opened in an external browser
+                                                                   [string] [default: URLs sharing the same base domain]
+      --strict-internal-urls  disable domain-based matching on internal URLs                  [boolean] [default: false]
+      --proxy-rules           proxy rules; see https://www.electronjs.org/docs/api/session#sessetproxyconfig    [string]
+
+====== Auth Options ======
+      --basic-auth-password  basic http(s) auth password                                                        [string]
+      --basic-auth-username  basic http(s) auth username                                                        [string]
+
+====== Graphics Options ======
+      --disable-gpu           disable hardware acceleration                                   [boolean] [default: false]
+      --enable-es3-apis       force activation of WebGL 2.0                                   [boolean] [default: false]
+      --ignore-gpu-blacklist  force WebGL apps to work on unsupported GPUs                    [boolean] [default: false]
+
+====== (In)Security Options ======
+      --disable-old-build-warning-yesiknowitisinsecure  disable warning shown when opening an app made too long ago;
+                                                        Nativefier uses the Chrome browser (through Electron), and it is
+                                                        dangerous to keep using an old version of it
+                                                                                              [boolean] [default: false]
+      --ignore-certificate                              ignore certificate-related errors     [boolean] [default: false]
+      --insecure                                        enable loading of insecure content    [boolean] [default: false]
+
+====== Platform-Specific Options ======
+      --app-copyright             (macOS, windows only) set a human-readable copyright line for the app; maps to
+                                  `LegalCopyright` metadata property on Windows, and `NSHumanReadableCopyright` on macOS
+                                                                                                                [string]
+      --app-version               (macOS, windows only) set the version of the app; maps to the `ProductVersion`
+                                  metadata property on Windows, and `CFBundleShortVersionString` on macOS       [string]
+      --bounce                    (macOS only) make the dock icon bounce when the counter increases
+                                                                                              [boolean] [default: false]
+      --build-version             (macOS, windows only) set the build version of the app; maps to `FileVersion` metadata
+                                  property on Windows, and `CFBundleVersion` on macOS                           [string]
+      --counter                   (macOS only) set a dock count badge, determined by looking for a number in the window
+                                  title                                                       [boolean] [default: false]
+      --darwin-dark-mode-support  (macOS only) enable Dark Mode support on macOS 10.14+       [boolean] [default: false]
+  -f, --fast-quit                 (macOS only) quit app on window close                       [boolean] [default: false]
+      --title-bar-style           (macOS only) set title bar style; consider injecting custom CSS (via --inject) for
+                                  better integration                         [string] [choices: "hidden", "hiddenInset"]
+      --win32metadata             (windows only) a JSON string of key/value pairs (ProductName, InternalName,
+                                  FileDescription) to embed as executable metadata
+
+====== Debug Options ======
+      --crash-reporter  remote server URL to send crash reports                                                 [string]
+      --verbose         enable verbose/debug/troubleshooting logs                             [boolean] [default: false]
+      --quiet           suppress all logging                                                  [boolean] [default: false]
+
+Other Options
+      --version  Show version number                                                                           [boolean]
+      --help     Show help                                                                                     [boolean]
+
+Examples:
+  nativefier <targetUrl> -n <name>                Make an app from <targetUrl> and set the application name to <name>
+  nativefier --upgrade <pathToExistingApp>        Upgrade (in place) the existing Nativefier app at <pathToExistingApp>
+  nativefier <targetUrl> -p <platform> -a <arch>  Make an app from <targetUrl> for the OS <platform> and CPU
+                                                  architecture <arch>
+  for more examples and help...                   See https://github.com/nativefier/nativefier/blob/master/CATALOG.md
+PS C:\Users\yangm>
+
+
+
+
+
+
+
+
+PS C:\Users\yangm> nativefier.cmd –platform android http://127.0.0.1:8080
+
+
+    Hi! Nativefier is minimally maintained these days, and needs more hands.
+    If you have the time & motivation, help with bugfixes and maintenance is VERY welcome.
+    Please go to https://github.com/nativefier/nativefier and help how you can. Thanks.
+
+
+
+Processing options...
+URL "–platform" lacks a protocol. Will try to parse it as HTTPS: "https://–platform". Please pass "http://–platform" if this is what you meant.
+Unable to automatically determine app name, falling back to 'APP'. AxiosError: getaddrinfo ENOTFOUND xn--platform-rn3d
+    at Function.AxiosError.from (C:\Users\yangm\AppData\Roaming\npm\node_modules\nativefier\node_modules\axios\lib\core\AxiosError.js:89:14)
+    at RedirectableRequest.handleRequestError (C:\Users\yangm\AppData\Roaming\npm\node_modules\nativefier\node_modules\axios\lib\adapters\http.js:577:25)
+    at RedirectableRequest.emit (node:events:513:28)
+    at ClientRequest.eventHandlers.<computed> (C:\Users\yangm\AppData\Roaming\npm\node_modules\nativefier\node_modules\follow-redirects\index.js:14:24)
+    at ClientRequest.emit (node:events:513:28)
+    at TLSSocket.socketErrorListener (node:_http_client:502:9)
+    at TLSSocket.emit (node:events:513:28)
+    at emitErrorNT (node:internal/streams/destroy:151:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:116:3)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  hostname: 'xn--platform-rn3d',
+  syscall: 'getaddrinfo',
+  code: 'ENOTFOUND',
+  errno: -3008,
+  config: {
+    transitional: {
+      silentJSONParsing: true,
+      forcedJSONParsing: true,
+      clarifyTimeoutError: false
+    },
+    adapter: [ 'xhr', 'http' ],
+    transformRequest: [ [Function: transformRequest] ],
+    transformResponse: [ [Function: transformResponse] ],
+    timeout: 0,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    maxBodyLength: -1,
+    env: { FormData: [Function], Blob: [class Blob] },
+    validateStatus: [Function: validateStatus],
+    headers: AxiosHeaders {
+      Accept: 'application/json, text/plain, */*',
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15',
+      'Accept-Encoding': 'gzip, compress, deflate, br'
+    },
+    method: 'get',
+    url: 'https://xn--platform-rn3d/',
+    data: undefined
+  },
+  request: <ref *1> Writable {
+    _writableState: WritableState {
+      objectMode: false,
+      highWaterMark: 16384,
+      finalCalled: false,
+      needDrain: false,
+      ending: false,
+      ended: false,
+      finished: false,
+      destroyed: false,
+      decodeStrings: true,
+      defaultEncoding: 'utf8',
+      length: 0,
+      writing: false,
+      corked: 0,
+      sync: true,
+      bufferProcessing: false,
+      onwrite: [Function: bound onwrite],
+      writecb: null,
+      writelen: 0,
+      afterWriteTickInfo: null,
+      buffered: [],
+      bufferedIndex: 0,
+      allBuffers: true,
+      allNoop: true,
+      pendingcb: 0,
+      constructed: true,
+      prefinished: false,
+      errorEmitted: false,
+      emitClose: true,
+      autoDestroy: true,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      [Symbol(kOnFinished)]: []
+    },
+    _events: [Object: null prototype] {
+      response: [Function: handleResponse],
+      error: [Function: handleRequestError],
+      socket: [Function: handleRequestSocket]
+    },
+    _eventsCount: 3,
+    _maxListeners: undefined,
+    _options: {
+      maxRedirects: 21,
+      maxBodyLength: Infinity,
+      protocol: 'https:',
+      path: '/',
+      method: 'GET',
+      headers: [Object: null prototype],
+      agents: [Object],
+      auth: undefined,
+      beforeRedirect: [Function: dispatchBeforeRedirect],
+      beforeRedirects: [Object],
+      hostname: 'xn--platform-rn3d',
+      port: '',
+      agent: undefined,
+      nativeProtocols: [Object],
+      pathname: '/'
+    },
+    _ended: true,
+    _ending: true,
+    _redirectCount: 0,
+    _redirects: [],
+    _requestBodyLength: 0,
+    _requestBodyBuffers: [],
+    _onNativeResponse: [Function (anonymous)],
+    _currentRequest: ClientRequest {
+      _events: [Object: null prototype],
+      _eventsCount: 7,
+      _maxListeners: undefined,
+      outputData: [],
+      outputSize: 0,
+      writable: true,
+      destroyed: false,
+      _last: true,
+      chunkedEncoding: false,
+      shouldKeepAlive: false,
+      maxRequestsOnConnectionReached: false,
+      _defaultKeepAlive: true,
+      useChunkedEncodingByDefault: false,
+      sendDate: false,
+      _removedConnection: false,
+      _removedContLen: false,
+      _removedTE: false,
+      strictContentLength: false,
+      _contentLength: 0,
+      _hasBody: true,
+      _trailer: '',
+      finished: true,
+      _headerSent: true,
+      _closed: false,
+      socket: [TLSSocket],
+      _header: 'GET / HTTP/1.1\r\n' +
+        'Accept: application/json, text/plain, */*\r\n' +
+        'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15\r\n' +
+        'Accept-Encoding: gzip, compress, deflate, br\r\n' +
+        'Host: xn--platform-rn3d\r\n' +
+        'Connection: close\r\n' +
+        '\r\n',
+      _keepAliveTimeout: 0,
+      _onPendingData: [Function: nop],
+      agent: [Agent],
+      socketPath: undefined,
+      method: 'GET',
+      maxHeaderSize: undefined,
+      insecureHTTPParser: undefined,
+      joinDuplicateHeaders: undefined,
+      path: '/',
+      _ended: false,
+      res: null,
+      aborted: false,
+      timeoutCb: null,
+      upgradeOrConnect: false,
+      parser: null,
+      maxHeadersCount: null,
+      reusedSocket: false,
+      host: 'xn--platform-rn3d',
+      protocol: 'https:',
+      _redirectable: [Circular *1],
+      [Symbol(kCapture)]: false,
+      [Symbol(kBytesWritten)]: 0,
+      [Symbol(kNeedDrain)]: false,
+      [Symbol(corked)]: 0,
+      [Symbol(kOutHeaders)]: [Object: null prototype],
+      [Symbol(errored)]: null,
+      [Symbol(kUniqueHeaders)]: null
+    },
+    _currentUrl: 'https://xn--platform-rn3d/',
+    [Symbol(kCapture)]: false
+  },
+  cause: Error: getaddrinfo ENOTFOUND xn--platform-rn3d
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:107:26) {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'xn--platform-rn3d'
+  }
+}
+Cannot automatically retrieve the app icon: getaddrinfo ENOTFOUND xn--platform-rn3d on https://xn--platform-rn3d/
+
+Preparing Electron app...
+
+Converting icons...
+
+Packaging... This will take a few seconds, maybe minutes if the requested Electron isn't cached yet...
+Error during build. Run with --verbose for details. GotError [RequestError]: read ECONNRESET
+    at ClientRequest.<anonymous> (C:\Users\yangm\AppData\Roaming\npm\node_modules\nativefier\node_modules\got\source\request-as-event-emitter.js:178:14)
+    at Object.onceWrapper (node:events:628:26)
+    at ClientRequest.emit (node:events:525:35)
+    at ClientRequest.emit (node:domain:489:12)
+    at ClientRequest.origin.emit (C:\Users\yangm\AppData\Roaming\npm\node_modules\nativefier\node_modules\@szmarczak\http-timer\source\index.js:37:11)
+    at TLSSocket.socketErrorListener (node:_http_client:502:9)
+    at TLSSocket.emit (node:events:513:28)
+    at TLSSocket.emit (node:domain:489:12)
+    at emitErrorNT (node:internal/streams/destroy:151:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:116:3)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  code: 'ECONNRESET',
+  host: 'github.com',
+  hostname: 'github.com',
+  method: 'GET',
+  path: '/electron/electron/releases/download/v19.1.4/electron-v19.1.4-win32-x64.zip',
+  socketPath: undefined,
+  protocol: 'https:',
+  url: 'https://github.com/electron/electron/releases/download/v19.1.4/electron-v19.1.4-win32-x64.zip',
+  gotOptions: {
+    path: '/electron/electron/releases/download/v19.1.4/electron-v19.1.4-win32-x64.zip',
+    protocol: 'https:',
+    slashes: true,
+    auth: null,
+    host: 'github.com',
+    port: null,
+    hostname: 'github.com',
+    hash: null,
+    search: null,
+    query: null,
+    pathname: '/electron/electron/releases/download/v19.1.4/electron-v19.1.4-win32-x64.zip',
+    href: 'https://github.com/electron/electron/releases/download/v19.1.4/electron-v19.1.4-win32-x64.zip',
+    retry: {
+      retries: [Function (anonymous)],
+      methods: [Set],
+      statusCodes: [Set],
+      errorCodes: [Set]
+    },
+    headers: {
+      'user-agent': 'got/9.6.0 (https://github.com/sindresorhus/got)',
+      'accept-encoding': 'gzip, deflate'
+    },
+    hooks: {
+      beforeRequest: [],
+      beforeRedirect: [],
+      beforeRetry: [],
+      afterResponse: [],
+      beforeError: [],
+      init: []
+    },
+    decompress: true,
+    throwHttpErrors: true,
+    followRedirect: true,
+    stream: true,
+    form: false,
+    json: false,
+    cache: false,
+    useElectronNet: false,
+    method: 'GET'
+  }
+}

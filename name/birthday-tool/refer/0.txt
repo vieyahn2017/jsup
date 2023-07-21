@@ -1,0 +1,98 @@
+@font-face
+报错，改成4.0之后的版本
+https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.css
+
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('../fonts/glyphicons-halflings-regular.eot');
+  src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
+总是报错
+GET file:///D:/yh/dict/birthday-tool-master/fonts/glyphicons-halflings-regular.woff2 net::ERR_FILE_NOT_FOUND
+bootstrap.min.css:1          GET file:///D:/yh/dict/birthday-tool-master/fonts/glyphicons-halflings-regular.woff net::ERR_FILE_NOT_FOUND
+bootstrap.min.css:1          GET file:///D:/yh/dict/birthday-tool-master/fonts/glyphicons-halflings-regular.ttf net::ERR_FILE_NOT_FOUND
+
+jquery模式：
+
+$('#result1').hide();
+$('#result').show();
+
+
+import BootstrapVue from '@/common/js/bootstrap-vue.min.js'
+Vue.use(BootstrapVue, {})
+
+template.h5.html
+
+vue 引入外部js
+
+1 在main.js引入并挂在全局空间
+import moment from '@/common/js/moment-with-locales.min.js'
+Vue.prototype.$moment = moment;
+使用的时候用 this.moment()
+2 在page页面引入
+	import moment from '@/common/js/moment-with-locales.min.js'
+	import calendar from '@/common/js/calendar.js'
+	import StemsBranch from '@/common/js/stemsbranch.js'
+moment是直接就可以用
+import moment from '@/common/js/moment-with-locales.min.js'
+另外那两个js 需要稍作改动
+在末尾加入
+export default calendar;
+export default StemsBranch;
+
+BootstrapVue 在微信小程序不可用
+
+
+uniapp是严格模式，局部变量没有使用var和let生命会报错
+
+dcloud  fei-un
+
+双大括号会将数据解释为纯文本，而不是 HTML。若想插入 HTML，你需要使用 v-html 指令：
+<p>Using text interpolation: {{ rawHtml }}</p>
+<p>Using v-html directive: <span v-html="rawHtml"></span></p>
+
+
+pages.json从第一个页面复制成3份，报错
+does not have a method "__e" to handle event "tap".
+第二天再启动，没有这个错了
+应该是缓存原因吧
+
+
+vue page引入外部js
+搜到的帖子
+remote-js不行，是不是太老了
+import {} 不行
+主入口页面 index.html 中用 script 标签引入
+
+uniapp如何引入js文件-uni-app-PHP中文网
+
+
+module.exports = {
+    configureWebpack: {
+        externals: {
+            "cnchar": "cnchar"
+        },
+        resolve: {
+            alias: {
+                "@": path.resolve(__dirname, "../"),
+            },
+        }
+    }
+}
+
+还有
+引用外部js
+    var script = document.createElement('script');
+    script.src = "js地址";
+    document.body.appendChild(script);
+链接：https://www.jianshu.com/p/2e4b5811d09a
+
+
+昨天的 到底起没起作用
+    "h5" : {
+        "template" : "index.html"
+    }
+    "h5" : {
+        "template" : "template.h5.html"
+    }

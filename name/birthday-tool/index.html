@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>生辰小助手</title>
+
+    <!-- Alternative links -->
+    <!-- CSS and JS-->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/moment-with-locales.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+<!--    <script src="js/bootstrap-datetimepicker.min.js"></script>-->
+<!--    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">-->
+<!--    <link href="css/bootstrap-datetimepicker-standalone.min.css" rel="stylesheet">-->
+    <script type="text/javascript" src="util/stemsbranch.js"></script>
+    <script type="text/javascript" src="util/calendar.js"></script>
+    <script type="text/javascript" src="util/wuxing.js"></script>
+    <style>
+        body {
+            padding-top: 0px;
+        }
+
+        span.hl {
+            color: red;
+        }
+
+        .vspace {
+            padding: .5em;
+        }
+
+        #result {
+            display: none;
+        }
+
+<!--        #result10 {-->
+<!--            display: none;-->
+<!--        }-->
+
+        .c3 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .c4 {
+            padding-left: 0;
+        }
+    </style>
+    <script>
+        // var dp;
+        function calc() {
+            moment.locale('zh-CN');
+            var str = $('#birthday').val();
+            // document.getElementById("year").value //  $("#year").val()
+            var year = $("#year").val() ?? "2023";  // 最新：直接不要year的选择框
+            str = str.replace("YYYY", year);
+            var birth = moment(str, 'YYYY年M月D日HH点');
+            var start = moment('1970-01-01');
+            var days = birth.diff(start, 'days');
+            var offset = days + 17;
+            var dayCol = StemsBranch.StemsBranchTable[offset % 60];
+            //console.log(dayCol);
+            var lunar = calendar.solar2lunar(birth.year(), birth.month() + 1, birth.date());
+            //console.log(lunar);
+            $('#result').hide();
+            // var isLocal = $("#isLocal").is(':checked');
+            var isLocal = true;
+            if (isLocal) {
+                // v1_local(birth, lunar);
+                v1_local_yh(birth, lunar, false);
+            } else {
+                v2(birth);
+            }
+        }
+
+        $(document).ready(function () {
+            /*
+            dp = $('#datetimepicker1').datetimepicker({
+                locale: 'zh-CN',
+                minDate: moment('1901-01-01'),
+                maxDate: moment('2100-12-31'),
+                format: 'YYYY年M月D日HH点'
+            });
+            */
+
+            var m = '<option value="0">－请选择－</option>';
+            for (var y = 1901; y < 2100; y++) {
+                m += '<option value="' + y + '">' + y + '年</option>';
+            }
+            $("#year").html(m);
+            $("#year").change(function () {
+                var o = $(this).find("option:selected");
+                var v = parseInt(o.val());
+                var ss = o.text();
+                if (v > 0) {
+                    var str = $('#birthday').val();
+                    if (str) {
+                        $('#birthday').val(v + str.substr(4));
+                    } else {
+                        $('#birthday').val(ss + '1月1日00点');
+                    }
+                    // var d = moment($('#birthday').val(), 'YYYY年M月D日HH点');
+                    // dp.date(d);
+                    // dp.show();
+                }
+            });
+            var today = moment();
+            $('#year').val(today.year());
+            $('#birthday').val(today.format('YYYY年M月D日HH点'));
+            $('#birthday10').val(today.format('YYYY年M月D日'));
+
+            // $('#birthday').change(function () {
+            //    var s = $(this).val();
+            //    dp.date(moment(s, 'YYYY年M月D日HH点'));
+            // });
+
+            $("#isLunar").change(function () {
+                if ($("#isLunar").is(':checked')) {
+                    $("#isLocal").attr("disabled", "disabled");
+                    $("#isLeap").removeAttr("disabled");
+                } else {
+                    $("#isLocal").removeAttr("disabled");
+                    $("#isLeap").attr("disabled", "disabled");
+                }
+            });
+
+            $("#isLocal").change(function () {
+                if ($("#isLocal").is(':checked')) {
+                    $("#isLunar").attr("disabled", "disabled");
+                    $("#isLeap").attr("disabled", "disabled");
+                } else {
+                    $("#isLunar").removeAttr("disabled");
+                    $("#isLeap").removeAttr("disabled");
+                }
+            });
+        });
+
+        function v1_local(birth, lunar) {
+            $('#o-solar').html(birth.format('YYYY年M月D日HH点 dddd'));
+            $('#o-lunar')
+                .html(lunar.lYear + '年' + lunar.lMonth + '月' + lunar.lDay + '日(' + lunar.IMonthCn + lunar.IDayCn + ')');
+            var dayStems = lunar.gzDay.substring(0, 1);
+            var hSection = StemsBranch.getHourStems(dayStems, birth.hour()) + StemsBranch.getHourBranch(birth.hour());
+            $('#o-animal').html('属<span class="hl">' + StemsBranch.getAnimal(lunar.gzYear) + '</span>');
+            $('#o-eight').html(
+                lunar.gzYear + ' ' + lunar.gzMonth + ' ' + lunar.gzDay + ' ' + hSection + ' 属<span class="hl">'
+                + StemsBranch.getStemsElement(dayStems)) + "</span>";
+            var allfive = StemsBranch.getStemsBranchElement(lunar.gzYear) + ' '
+                + StemsBranch.getStemsBranchElement(lunar.gzMonth) + ' ' + StemsBranch.getStemsBranchElement(lunar.gzDay) + ' '
+                + StemsBranch.getStemsBranchElement(hSection);
+            var lose = '金木水火土';
+            for (var i = 0; i < allfive.length; i++) {
+                lose = lose.replace(allfive.charAt(i), '');
+            }
+            if (lose.length > 0) {
+                lose = ' 缺<span class="hl">' + lose + '<span>';
+            }
+            $('#o-five').html(allfive + lose);
+            $('#result').show();
+        }
+
+        function v2(birth) {
+			var p = document.location.protocol;
+            var api = 'http://api.ieclipse.cn/wnl/';
+			if (p == 'https:')
+			{
+				api = 'https://cdn.ieclipse.cn/wnl/';
+			}
+            var isLunar = $("#isLunar").is(':checked');
+            var isLeap = $("#isLeap").is(':checked')
+            var date = birth.format('YYYY-MM-DD-HH');//console.log(date);
+            api += isLunar ? 'solar' : 'lunar';
+            $.getJSON(api, {date: date, l: isLeap}, function (data) {
+                if (data) {
+                    if (data.code === 0) {
+                        v2_callback(data.data)
+                    } else {
+                        $('#result').html('<span class="hl">' + data.msg + '</span>');
+                    }
+                    $('#result').show();
+                }
+            });
+        }
+
+        function v2_callback(data) {
+            $('#o-solar').html(data.sYear + '年' + data.sMonth + '月' + data.sDay + '日' + data.sHour + '时 星期' + data.cWeek);
+            $('#o-lunar')
+                .html(data.lYear + '年' + data.lMonth + '月' + data.lDay + '日(' + data.hzYear + '年' + data.hzMonth + '月' + data.hzDay + ')');
+            var dayStems = data.cDay.substring(0, 1);
+            var hSection = data.cHour;//StemsBranch.getHourStems(dayStems, birth.hour()) + StemsBranch.getHourBranch(birth.hour());
+            $('#o-animal').html('属<span class="hl">' + data.cAnimal + '</span>');
+            $('#o-eight').html(
+                data.cYear + ' ' + data.cMonth + ' ' + data.cDay + ' ' + hSection + ' 属<span class="hl">'
+                + StemsBranch.getStemsElement(dayStems)) + "</span>";
+            var allfive = StemsBranch.getStemsBranchElement(data.cYear) + ' '
+                + StemsBranch.getStemsBranchElement(data.cMonth) + ' ' + StemsBranch.getStemsBranchElement(data.cDay) + ' '
+                + StemsBranch.getStemsBranchElement(hSection);
+            var lose = '金木水火土';
+            for (var i = 0; i < allfive.length; i++) {
+                lose = lose.replace(allfive.charAt(i), '');
+            }
+            if (lose.length > 0) {
+                lose = ' 缺<span class="hl">' + lose + '<span>';
+            }
+            $('#o-five').html(allfive + lose);
+            $('#result').show();
+        }
+
+        function hidden0() {
+            $('#result').hide();
+        }
+
+        function hidden1() {
+            $('#result1').hide();
+        }
+
+        function v1_local_yh(birth, lunar, only_calc) {
+            var content_o_solar = birth.format('YYYY年M月D日HH点 dddd');
+            var content_o_lunar = lunar.lYear + '年' + lunar.lMonth + '月' + lunar.lDay + '日(' + lunar.IMonthCn + lunar.IDayCn + ')';
+            var content_o_animal = '属' + StemsBranch.getAnimal(lunar.gzYear);
+            var dayStems = lunar.gzDay.substring(0, 1);
+            var hSection = StemsBranch.getHourStems(dayStems, birth.hour()) + StemsBranch.getHourBranch(birth.hour());
+            var content_o_eight = lunar.gzYear + ' ' + lunar.gzMonth + ' ' + lunar.gzDay + ' ' + hSection;
+            // content_o_eight += ' 属' + StemsBranch.getStemsElement(dayStems));
+            var allfive = StemsBranch.getStemsBranchElement(lunar.gzYear) + ' '
+                + StemsBranch.getStemsBranchElement(lunar.gzMonth) + ' ' + StemsBranch.getStemsBranchElement(lunar.gzDay) + ' '
+                + StemsBranch.getStemsBranchElement(hSection);
+            var lose = '金木水火土';
+            for (var i = 0; i < allfive.length; i++) {
+                lose = lose.replace(allfive.charAt(i), '');
+            }
+            var content_o_five = allfive;
+            var lose_str = "";
+            if (lose.length > 0) {
+                lose_str = ' 缺<span class="hl">' + lose + '<span>';
+                content_o_five += ' 缺' + lose;
+            }
+
+            var xiyong = get_XiYong(allfive);
+
+            if (!only_calc) {
+                $('#o-solar').html(content_o_solar);
+                $('#o-lunar').html(content_o_lunar);
+                $('#o-animal').html('属<span class="hl">' + StemsBranch.getAnimal(lunar.gzYear) + '</span>');
+                $('#o-eight').html(content_o_eight + ' 属<span class="hl">' + StemsBranch.getStemsElement(dayStems)) + "</span>";
+                $('#o-five').html(allfive + lose_str);
+                $('#o-xiyong').html(xiyong);
+                $('#result').show();
+                $('#result1').hide();
+            }
+
+            var result = "阳历：" + content_o_solar + "  ";
+            result += "阴历：" + content_o_lunar + "  ";
+            result += "生肖：" + content_o_animal + "  ";
+            result += "八字：" + content_o_eight + "  ";
+            result += "五行：" + content_o_five + " === ";
+            result += xiyong;
+
+            if (!only_calc) {
+                console.log(result);
+            }
+
+            return result;
+        }
+
+        function calc_test(birth_str, expected_str) {
+            moment.locale('zh-CN');
+            var birth = moment(birth_str, 'YYYY年M月D日HH点');
+            var lunar = calendar.solar2lunar(birth.year(), birth.month() + 1, birth.date());
+            //console.log(lunar);
+
+            var res = v1_local_yh(birth, lunar, true);
+
+            console.log(res == expected_str);
+            return res == expected_str;
+        }
+
+        function calc_test_main() {
+            calc_test("1973年5月15日23点", "阳历：1973年5月15日23点 星期二  阴历：1973年4月13日(四月十三)  生肖：属牛  八字：癸丑 丁巳 辛亥 戊子  五行：水土 火火 金水 土水 缺木 === 同类五行：金1,土2  异类五行：木0,火2,水3  喜用神：【金】");
+            calc_test("2023年6月14日22点", "阳历：2023年6月14日22点 星期三  阴历：2023年4月27日(四月廿七)  生肖：属兔  八字：癸卯 戊午 癸卯 癸亥  五行：水木 土火 水木 水水 缺金 === 同类五行：水4,金0  异类五行：木2,火1,土1  喜用神：【金】");
+            calc_test("1993年12月26日18点", "阳历：1993年12月26日18点 星期日  阴历：1993年11月14日(冬月十四)  生肖：属鸡  八字：癸酉 甲子 辛巳 丁酉  五行：水金 木水 金火 火金 缺土 === 同类五行：金3,土0  异类五行：木1,火2,水2  喜用神：【土】");
+            calc_test("2023年6月15日11点", "阳历：2023年6月15日11点 星期四  阴历：2023年4月28日(四月廿八)  生肖：属兔  八字：癸卯 戊午 甲辰 庚午  五行：水木 土火 木土 金火 === 同类五行：木2,水1  异类五行：火2,土2,金1  喜用神：【水】");
+            calc_test("2023年6月7日22点", "阳历：2023年6月7日22点 星期三  阴历：2023年4月20日(四月二十)  生肖：属兔  八字：癸卯 戊午 丙申 己亥  五行：水木 土火 火金 土水 === 同类五行：火2,木1  异类五行：土2,金1,水2  喜用神：【木】");
+            calc_test("2017年3月21日15点", "阳历：2017年3月21日15点 星期二  阴历：2017年2月24日(二月廿四)  生肖：属鸡  八字：丁酉 癸卯 丁未 戊申  五行：火金 水木 火土 土金 === 同类五行：火2,木1  异类五行：土2,金2,水1  喜用神：【木】");
+            calc_test("2023年6月8日10点", "阳历：2023年6月8日10点 星期四  阴历：2023年4月21日(四月廿一)  生肖：属兔  八字：癸卯 戊午 丁酉 乙巳  五行：水木 土火 火金 木火 === 同类五行：火3,木2  异类五行：土1,金1,水1  喜用神：【水】");
+            calc_test("2023年6月8日12点", "阳历：2023年6月8日12点 星期四  阴历：2023年4月21日(四月廿一)  生肖：属兔  八字：癸卯 戊午 丁酉 丙午  五行：水木 土火 火金 火火 === 同类五行：火4,木1  异类五行：土1,金1,水1  喜用神：【水】");
+            calc_test("2023年3月17日10点", "阳历：2023年3月17日10点 星期五  阴历：2023年2月26日(二月廿六)  生肖：属兔  八字：癸卯 乙卯 甲戌 己巳  五行：水木 木木 木土 土火 缺金 === 同类五行：木4,水1  异类五行：火1,土2,金0  喜用神：【金】");
+            calc_test("2023年3月17日08点", "阳历：2023年3月17日08点 星期五  阴历：2023年2月26日(二月廿六)  生肖：属兔  八字：癸卯 乙卯 甲戌 戊辰  五行：水木 木木 木土 土土 缺金火 === 同类五行：木4,水1  异类五行：火0,土3,金0  喜用神：【金】");
+            calc_test("1993年10月26日08点", "阳历：1993年10月26日08点 星期二  阴历：1993年9月12日(九月十二)  生肖：属鸡  八字：癸酉 壬戌 庚辰 庚辰  五行：水金 水土 金土 金土 缺木火 === 同类五行：金3,土3  异类五行：木0,火0,水2  喜用神：【火】");
+            calc_test("2023年3月17日06点", "阳历：2023年3月17日06点 星期五  阴历：2023年2月26日(二月廿六)  生肖：属兔  八字：癸卯 乙卯 甲戌 丁卯  五行：水木 木木 木土 火木 缺金 === 同类五行：木5,水1  异类五行：火1,土1,金0  喜用神：【水】");
+            calc_test("1973年12月26日12点", "阳历：1973年12月26日12点 星期三  阴历：1973年12月3日(腊月初三)  生肖：属牛  八字：癸丑 甲子 丙申 甲午  五行：水土 木水 火金 木火 === 同类五行：火2,木2  异类五行：土1,金1,水2  喜用神：【土】");
+            calc_test("2023年6月14日15点", "阳历：2023年6月14日15点 星期三  阴历：2023年4月27日(四月廿七)  生肖：属兔  八字：癸卯 戊午 癸卯 庚申  五行：水木 土火 水木 金金 === 同类五行：水2,金2  异类五行：木2,火1,土1  喜用神：【火】");
+            calc_test("2023年6月15日15点", "阳历：2023年6月15日15点 星期四  阴历：2023年4月28日(四月廿八)  生肖：属兔  八字：癸卯 戊午 甲辰 壬申  五行：水木 土火 木土 水金 === 同类五行：木2,水2  异类五行：火1,土2,金1  喜用神：【金】");
+            calc_test("2000年1月11日22点", " ");
+        }
+        // calc_test_main();
+
+        /* ${year}年${month}月${day}日${i}点 */
+        function calc_by_birth_str(birth_str) {
+            moment.locale('zh-CN');
+            var birth = moment(birth_str, 'YYYY年M月D日HH点');
+            var lunar = calendar.solar2lunar(birth.year(), birth.month() + 1, birth.date());
+            var res = v1_local_yh(birth, lunar, true);
+            // console.log(res);
+            return res;
+        }
+
+        // 入参 2023-06-14
+        function calc_one_day(birth_day) {
+            var date_items = birth_day.split("-");
+            var year = date_items[0];
+            var month = date_items[1];
+            var day = date_items[2];
+            for (var i = 1; i < 24; i++, i++) {
+                var birth_str = `${year}年${month}月${day}日${i}点`;
+                var res = calc_by_birth_str(birth_str);
+                console.log(res);
+            }
+
+        }
+
+        // calc_one_day("2023-06-14");
+        // calc_one_day("2023-06-15");
+        // calc_one_day("2023-06-16");
+        // calc_one_day("2023-06-17");
+
+
+        function calc_oneday_show() {
+            var results = [];
+            moment.locale('zh-CN');
+            var birth_day = $('#birthday10').val();
+            var birth = moment(birth_day, 'YYYY年M月D日');
+            var year = birth.year();
+            var month = birth.month() + 1;
+            var day = birth.date();
+            var content_o_solar = "阳历：" + birth.format('YYYY年M月D日 dddd');
+            var lunar = calendar.solar2lunar(year, month, day);
+            var content_o_lunar = "阴历：" + lunar.lYear + '年' + lunar.lMonth + '月' + lunar.lDay + '日(' + lunar.IMonthCn + lunar.IDayCn + ')';
+            results.push(content_o_solar);
+            results.push(content_o_lunar);
+            for (var i = 1; i < 24; i++, i++) {
+                var birth_str = `${year}年${month}月${day}日${i}点`;
+                var res = (i < 10 ? "0" + i : i) + "点  八字" + calc_by_birth_str(birth_str).split("八字")[1];
+                results.push(res);
+            }
+            // console.log(results);
+            var htmls = "<div>" + results.join("</div><div>") + "</div>"
+            $("#result10").html(htmls);
+            $('#result1').show();
+
+        }
+
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+<!--        <div class="navbar-header">-->
+<!--            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"-->
+<!--                    data-target="#bs-example-navbar-collapse-1">-->
+<!--                <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span-->
+<!--                    class="icon-bar"></span> <span-->
+<!--                    class="icon-bar"></span>-->
+<!--            </button>-->
+<!--            <a class="navbar-brand" href="./index.html">生辰助手</a>-->
+<!--        </div>-->
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="./index.html">生辰八字</a></li>
+                <li><a href="./name.html">起名</a></li>
+                <li><a href="./baike/index.html">小百科</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="https://github.com/Jamling/birthday-tool/">Github</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+<div class="container">
+    <div class="page-header">
+        <h3>
+            生辰八字查询
+            <small>查询生辰八字，五行属性</small>
+        </h3>
+    </div>
+<!--    <div class="input-group col-md-5">-->
+<!--        <span class="input-group-addon">-->
+<!--        <span class="glyphicon glyphicon-list"></span> 出生年份</span>-->
+<!--        <select class="form-control" id="year">-->
+
+<!--        </select>-->
+<!--        <span class="input-group-btn">-->
+<!--      </span>-->
+<!--    </div>-->
+    <div class='input-group date col-md-5 .hidden-xs' id='datetimepicker1'>
+      <span class="input-group-addon">
+       <span class="glyphicon glyphicon-time"></span>出生日期</span>
+        <input type='text' class="form-control" style="padding-left: 4px; padding-right: 4px;" id="birthday"/>
+        <span class="input-group-btn">
+        <button class="btn btn-default" onclick="calc();">查看八字</button>
+      </span>
+    </div>
+<!--    <div class="visible-xs-block2" id="datetime-m">-->
+<!--    </div>-->
+
+<!--    <div class='input-group date col-md-5 checkbox'>-->
+<!--        <label for="isLunar">-->
+<!--            <input type='checkbox' id="isLunar">日期为农历-->
+<!--        </label>-->
+<!--        <label for="isLeap">-->
+<!--            <input type='checkbox' id="isLeap" disabled="disabled">农历闰月-->
+<!--        </label>-->
+<!--        <label for="isLocal" class="col-xs-12">-->
+<!--            <input type='checkbox' id="isLocal" name="isLocal" checked>使用旧版（以正月初一作为农历一年的开始）-->
+<!--        </label>-->
+<!--    </div>-->
+
+    <div id="usage">
+        使用说明：
+        <ul>
+<!--            <li>点击“<span class="glyphicon glyphicon-time"></span> 出生日期</span>”可以弹出日期控件</li>-->
+            <li>点击查看对应的生辰八字</li>
+            <li>出生日期精确到小时即可</li>
+            <li>出生日期须在公历1900-2100年之间（超过此时段，测算不准确哟）</li>
+<!--            <li>输入日期为农历，请勾选“日期为农历”（旧版不支持农历选项），如果为闰月，请勾选“农历闰月”</li>-->
+            <!--            <li style="color: #e00;">当更改“年份或日期后”，需要点两次“<span class="glyphicon glyphicon-time"></span> 出生日期</span>”日期控件才会变成更改后的年份</li>-->
+            <li style="color: #e00;">最新推出：以天为单位，查询五行喜用列表 </li>
+        </ul>
+    </div>
+    <div class="col-md-6" style="padding-left: 0;">
+        <div class="vspace"></div>
+        <div class="panel panel-success" id="result" onclick="hidden0();">
+            <div class="panel-heading">
+                <h3 class="panel-title">生辰八字</h3>
+            </div>
+            <div class="panel-body">
+                <div>
+                    <label>阳历：</label><span id="o-solar"></span>
+                </div>
+                <div>
+                    <label>阴历：</label><span id="o-lunar"></span>
+                </div>
+                <div>
+                    <label>生肖：</label><span id="o-animal"></span>
+                </div>
+                <div>
+                    <label>八字：</label><span id="o-eight"></span>
+                </div>
+                <div>
+                    <label>五行：</label><span id="o-five"></span>
+                </div>
+                <div>
+                    <label>喜用：</label><span id="o-xiyong"></span>
+                </div>
+            </div>
+            <div class="vspace"></div>
+        </div>
+    </div>
+
+    <div class='input-group date col-md-5 .hidden-xs'>
+        <span class="input-group-addon">
+        <span class="glyphicon glyphicon-time"></span> 出生日期</span>
+        <input type='text' class="form-control" style="padding-left: 4px; padding-right: 4px;" id="birthday10"/>
+        <span class="input-group-btn">
+        <button class="btn btn-default" onclick="calc_oneday_show();">查看全天</button>
+      </span>
+    </div>
+
+    <div class="col-md-6" style="padding-left: 0;">
+        <div class="vspace"></div>
+        <div class="panel panel-success" id="result1" onclick="hidden1();">
+            <div class="panel-heading">
+                <h3 class="panel-title">查询结果</h3>
+            </div>
+            <div class="panel-body" style="width:960px" id="result10">
+<!--                <div>01点 八字：癸卯 戊午 癸卯 甲寅  五行：水木 土火 水木 木木 缺金 === 同类五行：水2,金0  异类五行：木4,火1,土1  喜用神：【金】-->
+<!--                </div>-->
+<!--                <div>03点 八字：癸卯 戊午 癸卯 甲寅  五行：水木 土火 水木 木木 缺金 === 同类五行：水2,金0  异类五行：木4,火1,土1  喜用神：【金】-->
+<!--                </div>-->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
